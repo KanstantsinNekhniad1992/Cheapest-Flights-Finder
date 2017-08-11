@@ -1,0 +1,29 @@
+.flight-finder-form {
+    width: 80%;
+    height: 200px;
+    margin: 0 auto;
+    padding: 10px;
+    border: 2px solid #0000FF;
+    border-radius: 22px;
+}
+
+.flight-finder-form_departure-date-field,
+.flight-finder-form_arrival-date-field {
+    display: inline-block;
+}
+
+.flight-finder-form_departure-date-field {
+    margin-right: 20px;
+}
+
+.flight-finder-form_find-flights-button {
+    width: 80px;
+    background: #008000;
+    border: 1px solid #008000;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.flight-finder-form_find-flights-button i {
+    vertical-align: middle;
+}
