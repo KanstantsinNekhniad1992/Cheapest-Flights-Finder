@@ -33,7 +33,7 @@ class SearchForm extends React.Component {
 
 	render() {
 
-		let {onFromFieldChanged, submitHandler, onToFieldChanged, toggleArrivalDateField, onDatePickerFieldChanged, airportsNames, oneWayTicket} = this.props;
+		let {onFromFieldChanged, submitHandler, onToFieldChanged, toggleArrivalDateField, onDatePickerFieldChanged, airportsNames, oneWayTicket, possibleAirports} = this.props;
 
 		return (
 			<form onSubmit={submitHandler} className="flight-finder-form">
@@ -51,8 +51,7 @@ class SearchForm extends React.Component {
 						name="to"
 						filter={this.airportsFilter}
 						floatingLabelText='To'
-						// dataSource={(this.state.possibleAirports && this.state.possibleAirports.length) ? this.state.possibleAirports : this.state.airportsNames}
-						dataSource={airportsNames}
+						dataSource={(possibleAirports && possibleAirports.length) ? possibleAirports : airportsNames}
 						dataSourceConfig={{text: 'name', value: 'code'}}
 						onNewRequest={onToFieldChanged}
 					/>
@@ -71,7 +70,7 @@ class SearchForm extends React.Component {
 							onDatePickerFieldChanged({departureDate: this.normalizeDate(date)})
 						}}
 					/>
-					{oneWayTicket ? (
+					{!oneWayTicket ? (
 						<DatePicker
 							name="arrivalDate"
 							hintText='Arrival date'

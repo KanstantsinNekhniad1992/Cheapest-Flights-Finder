@@ -21,6 +21,7 @@
     border: 1px solid #008000;
     border-radius: 20px;
     cursor: pointer;
+    outline: none;
 }
 
 .flight-finder-form_find-flights-button i {

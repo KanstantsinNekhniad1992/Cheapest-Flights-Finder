@@ -17,6 +17,7 @@ class TicketsFinderContainer extends React.Component {
 			flights: {},
 			airportsNames: [],
 			oneWayTicket: false,
+			possibleAirports: [],
 			searchRequestData: {
 				from: '',
 				to: '',
@@ -69,6 +70,7 @@ class TicketsFinderContainer extends React.Component {
 
 	onFromFieldChanged(airport) {
 		let result;
+		let searchRequestData;
 
 		if (!airport) {
 			result = this.state.airportsNames;
@@ -86,27 +88,28 @@ class TicketsFinderContainer extends React.Component {
 			}, []);
 		}
 
+		searchRequestData = Object.assign({}, this.state.searchRequestData, {from: airport ? airport.code : ''});
+
 		this.setState({
-			searchRequestData: {
-				possibleAirports: result,
-				from: airport ? airport.code : ''
-			}
+			possibleAirports: result,
+			searchRequestData: searchRequestData
 		});
 	}
 
 	onToFieldChanged(airport) {
 		let airportCode = airport ? airport.code : '';
+		let searchRequestData = Object.assign({}, this.state.searchRequestData, {to: airportCode});
 
 		this.setState({
-			searchRequestData: {
-				to: airportCode
-			}
+			searchRequestData: searchRequestData
 		});
 	}
 
 	onDatePickerFieldChanged(payload) {
+		let searchRequestData = Object.assign({}, this.state.searchRequestData, payload);
+
 		this.setState({
-			...this.state.searchRequestData, ...payload
+			searchRequestData: searchRequestData
 		});
 	}
 
@@ -125,8 +128,6 @@ class TicketsFinderContainer extends React.Component {
 
 		let {tickets = []} = this.props.flights;
 
-		console.dir(tickets);
-
 		return (
 			<div>
 				<SearchForm
@@ -134,6 +135,7 @@ class TicketsFinderContainer extends React.Component {
 					onToFieldChanged={this.onToFieldChanged}
 					toggleArrivalDateField={this.toggleArrivalDateField}
 					onDatePickerFieldChanged={this.onDatePickerFieldChanged}
+					possibleAirports={this.state.possibleAirports}
 					airportsNames={this.state.airportsNames}
 					oneWayTicket={this.state.oneWayTicket}
 					submitHandler={this.submitHandler}
