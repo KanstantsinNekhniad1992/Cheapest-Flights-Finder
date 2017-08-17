@@ -4,6 +4,7 @@ import React from 'react';
 import Subheader from 'material-ui/Subheader';
 import PropTypes from 'prop-types';
 import {List, ListItem} from 'material-ui/List';
+import {normalizeDate} from "../../services/dateService"
 
 class TicketsRenderer extends React.Component {
 
@@ -18,20 +19,33 @@ class TicketsRenderer extends React.Component {
 	}
 
 	render() {
-
 		let tickets = this.sortTickets(this.props.tickets);
+		let listItems = [];
+        let primaryText;
+        let secondaryText;
+		let ticket;
+		let i = 0, len;
+
+        for (i, len = tickets.length; i < len; i++) {
+
+            ticket = tickets[i];
+            primaryText = `From ${normalizeDate(ticket.dateFrom)} To ${normalizeDate(ticket.dateTo)}`;
+            secondaryText = `Price: ${ticket.currency} ${Math.floor(ticket.price)}`;
+
+            listItems.push(
+				<ListItem
+					key={ticket.dateFrom + ticket.dateTo}
+					primaryText={primaryText}
+					secondaryText={secondaryText}
+					secondaryTextLines={1}
+				/>
+            )
+        }
 
 		return (
 			<List>
 				<Subheader><h2>Tickets</h2></Subheader>
-				{tickets.map(ticket =>
-					<ListItem
-						key={ticket.dateFrom}
-						primaryText={ticket.dateFrom}
-						secondaryText= ''
-						secondaryTextLines={2}
-					/>
-				)}
+				{listItems}
 			</List>
 		)
 	}

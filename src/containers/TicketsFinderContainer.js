@@ -31,6 +31,7 @@ class TicketsFinderContainer extends React.Component {
 		this.onToFieldChanged = this.onToFieldChanged.bind(this);
 		this.onDatePickerFieldChanged = this.onDatePickerFieldChanged.bind(this);
 		this.submitHandler = this.submitHandler.bind(this);
+        this.onFromFieldUpdated = this.onFromFieldUpdated.bind(this);
 	}
 
 	componentDidMount() {
@@ -96,6 +97,14 @@ class TicketsFinderContainer extends React.Component {
 		});
 	}
 
+    onFromFieldUpdated(searchText) {
+        if (searchText.length === 0) {
+            this.setState({
+                possibleAirports: this.state.airportsNames
+            });
+        }
+    }
+
 	onToFieldChanged(airport) {
 		let airportCode = airport ? airport.code : '';
 		let searchRequestData = Object.assign({}, this.state.searchRequestData, {to: airportCode});
@@ -139,6 +148,7 @@ class TicketsFinderContainer extends React.Component {
 					airportsNames={this.state.airportsNames}
 					oneWayTicket={this.state.oneWayTicket}
 					submitHandler={this.submitHandler}
+					onFromFieldUpdated={this.onFromFieldUpdated}
 				/>
 				<TicketsRenderer
 					tickets={tickets}
