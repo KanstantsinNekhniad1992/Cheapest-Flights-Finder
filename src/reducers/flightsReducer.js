@@ -11,7 +11,7 @@ export default function (state = initialState, action) {
 			};
 		case types.GET_TICKETS_SUCCESS:
 			return {
-				...state, tickets: action.data.flights
+				...state, tickets: action.data
 			};
 		default:
 			return state;

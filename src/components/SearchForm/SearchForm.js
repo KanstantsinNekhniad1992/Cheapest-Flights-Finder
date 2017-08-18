@@ -22,18 +22,105 @@ class SearchForm extends React.Component {
 
     constructor(props) {
         super(props);
+
+        this.state = {
+            searchRequestData: {
+                oneWayTicket: false,
+                from: '',
+                to: '',
+                arrivalDate: '',
+                departureDate: '',
+            },
+            possibleAirports: []
+        };
+
+        this.onDatePickerFieldChanged = this.onDatePickerFieldChanged.bind(this);
+        this.onFromFieldChanged = this.onFromFieldChanged.bind(this);
+        this.toggleArrivalDateField = this.toggleArrivalDateField.bind(this);
+        this.onFromFieldUpdated = this.onFromFieldUpdated.bind(this);
+        this.onToFieldChanged = this.onToFieldChanged.bind(this);
+        this.submitSearchForm = this.submitSearchForm.bind(this);
     }
 
     airportsFilter(searchText, key) {
         return key.toLowerCase().includes(searchText.toLowerCase());
     }
 
+    onDatePickerFieldChanged(payload) {
+        let searchRequestData = Object.assign({}, this.state.searchRequestData, payload);
+
+        this.setState({
+            searchRequestData: searchRequestData
+        });
+    }
+
+    toggleArrivalDateField(e, inputChecked) {
+        let searchRequestData = Object.assign({}, this.state.searchRequestData, {
+            oneWayTicket: inputChecked
+        });
+
+        this.setState({
+            searchRequestData: searchRequestData
+        });
+    }
+
+    onFromFieldChanged(airport) {
+        let result;
+        let searchRequestData;
+
+        if (!airport) {
+            result = this.props.airportsNames;
+        } else {
+            let currentRoutes = this.props.routes[airport.code];
+
+            result = this.props.airportsNames.reduce(function (prevValue, currentValue) {
+
+                if (currentRoutes.indexOf(currentValue.code) > -1) {
+                    prevValue.push(currentValue)
+                }
+
+                return prevValue;
+
+            }, []);
+        }
+
+        searchRequestData = Object.assign({}, this.state.searchRequestData, {from: airport ? airport.code : ''});
+
+        this.setState({
+            possibleAirports: result,
+            searchRequestData: searchRequestData
+        });
+    }
+
+    onFromFieldUpdated(searchText) {
+        if (searchText.length === 0) {
+            this.setState({
+                possibleAirports: this.state.airportsNames
+            });
+        }
+    }
+
+    onToFieldChanged(airport) {
+        let airportCode = airport ? airport.code : '';
+        let searchRequestData = Object.assign({}, this.state.searchRequestData, {to: airportCode});
+
+        this.setState({
+            searchRequestData: searchRequestData
+        });
+    }
+
+    submitSearchForm(e) {
+        e.preventDefault();
+
+        this.props.submitHandler(this.state.searchRequestData);
+    }
+
     render() {
 
-        let {onFromFieldChanged, submitHandler, onToFieldChanged, toggleArrivalDateField, onDatePickerFieldChanged, airportsNames, oneWayTicket, possibleAirports, onFromFieldUpdated} = this.props;
+        let {airportsNames} = this.props;
 
         return (
-            <form onSubmit={submitHandler} className="flight-finder-form">
+            <form onSubmit={this.submitSearchForm} className="flight-finder-form">
                 <div>
                     <AutoComplete
                         name="from"
@@ -41,23 +128,23 @@ class SearchForm extends React.Component {
                         floatingLabelText='From'
                         dataSource={airportsNames}
                         dataSourceConfig={{text: 'name', value: 'code'}}
-                        onNewRequest={onFromFieldChanged}
+                        onNewRequest={this.onFromFieldChanged}
                         style={styles.autoComplete}
-                        onUpdateInput={onFromFieldUpdated}
+                        onUpdateInput={this.onFromFieldUpdated}
                     />
                     <AutoComplete
                         name="to"
                         filter={this.airportsFilter}
                         floatingLabelText='To'
-                        dataSource={(possibleAirports && possibleAirports.length) ? possibleAirports : airportsNames}
+                        dataSource={(this.state.possibleAirports && this.state.possibleAirports.length) ? this.state.possibleAirports : airportsNames}
                         dataSourceConfig={{text: 'name', value: 'code'}}
-                        onNewRequest={onToFieldChanged}
+                        onNewRequest={this.onToFieldChanged}
                     />
                     <Toggle
                         label="One way ticket"
                         labelPosition='left'
                         style={styles.toggle}
-                        onToggle={toggleArrivalDateField}
+                        onToggle={this.toggleArrivalDateField}
                     />
                     <DatePicker
                         name="departureDate"
@@ -66,10 +153,10 @@ class SearchForm extends React.Component {
                         container="inline"
                         minDate={new Date()}
                         onChange={(eventData, date) => {
-                            onDatePickerFieldChanged({departureDate: normalizeDate(date)})
+                            this.onDatePickerFieldChanged({departureDate: normalizeDate(date)})
                         }}
                     />
-                    {!oneWayTicket ? (
+                    {!this.state.searchRequestData.oneWayTicket ? (
                         <DatePicker
                             name="arrivalDate"
                             hintText='Arrival date'
@@ -77,7 +164,7 @@ class SearchForm extends React.Component {
                             container="inline"
                             minDate={new Date()}
                             onChange={(eventData, date) => {
-                                onDatePickerFieldChanged({arrivalDate: normalizeDate(date)})
+                                this.onDatePickerFieldChanged({arrivalDate: normalizeDate(date)})
                             }}
                         />
                     ) : false}
@@ -90,12 +177,9 @@ class SearchForm extends React.Component {
 }
 
 SearchForm.propTypes = {
-    onFromFieldChanged: PropTypes.func,
-    onToFieldChanged: PropTypes.func,
-    toggleArrivalDateField: PropTypes.func,
-    onDatePickerFieldChanged: PropTypes.func,
     airportsNames: PropTypes.arrayOf(PropTypes.object),
-    oneWayTicket: PropTypes.bool
+    routes: PropTypes.object,
+    submitHandler: PropTypes.func
 };
 
 export default SearchForm;

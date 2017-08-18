@@ -1,0 +1,18 @@
+.tickets-list-holder {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.tickets-list-holder:before,
+.tickets-list-holder:after {
+    content: '';
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+.tickets-list-holder__list {
+    float: left;
+    width: 30%;
+}

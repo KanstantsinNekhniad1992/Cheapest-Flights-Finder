@@ -6,6 +6,10 @@ import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import './style.css';
 
+const styles = {
+    background: '#0000FF'
+};
+
 class Header extends React.Component {
 
     getChildContext() {
@@ -16,7 +20,7 @@ class Header extends React.Component {
         return (
             <AppBar
                 className="header"
-                style={{background: '#0000FF'}}
+                style={styles}
                 title="Raynair Flights Finder"
             />
         );

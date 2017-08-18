@@ -24,20 +24,38 @@ class FlightsApi {
     }
 
     static getTickets(payload) {
-	    let {from, to, arrivalDate, departureDate} = payload;
-	    let url = CHEAP_FLIGHTS_URL + 'from/' + from + '/to/' + to + '/' + departureDate + '/' + arrivalDate + '/250/unique/?limit=15&offset-0';
+        let {from, to, arrivalDate, departureDate, oneWayTicket} = payload;
+        let url = `${CHEAP_FLIGHTS_URL}from/${from}/to/${to}/${departureDate}/${arrivalDate}/250/unique/`;
+        let apiRequests = [];
+        let data = {};
 
-	    let request = new Request(url, {
-		    headers: headers
-	    });
+        let request = new Request(url, {
+            headers: headers
+        });
 
-	    return fetch(request).then(response => {
-		    return response.json();
-	    }).then(json => {
-		    return json;
-	    }).catch(error => {
-		    return error;
-	    });
+        let apiRequest1 = fetch(request).then(response => {
+            return response.json();
+        });
+        apiRequests.push(apiRequest1);
+
+        if (!oneWayTicket) {
+            url = `${CHEAP_FLIGHTS_URL}from/${to}/to/${from}/${arrivalDate}/${arrivalDate}/250/unique/`;
+            request = new Request(url, {
+                headers: headers
+            });
+            let apiRequest2 = fetch(request).then(response => {
+                return response.json();
+            });
+            apiRequests.push(apiRequest2);
+        }
+
+        return Promise.all(apiRequests).then(function (values) {
+            data.firstRoute = values[0];
+            if (!oneWayTicket) {
+                data.secondRoute = values[1];
+            }
+            return data;
+        });
 
     }
 
