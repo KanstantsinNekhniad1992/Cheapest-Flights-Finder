@@ -8,7 +8,7 @@ import * as flightsActions from '../actions/flightsActions';
 import TicketsRenderer from '../components/TicketsRenderer/TicketsRenderer';
 import SearchForm from '../components/SearchForm/SearchForm';
 
-class TicketsFinderContainer extends React.Component {
+export class TicketsFinderContainer extends React.Component {
 
 	constructor(props) {
 		super(props);

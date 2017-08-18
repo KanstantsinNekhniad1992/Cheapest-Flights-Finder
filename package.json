@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack",
     "dev-server": "webpack-dev-server",
-    "test": "mocha --compilers js:babel-core/register \"src/__tests__/*.spec.js\""
+    "test": "mocha --require ignore-styles --compilers js:babel-core/register \"src/__tests__/*.spec.js\""
   },
   "author": "Kanstantsin Nekhniadovich",
   "license": "ISC",
@@ -23,6 +23,7 @@
     "enzyme": "^2.9.1",
     "expect": "^1.20.2",
     "html-webpack-plugin": "^2.30.1",
+    "ignore-styles": "^5.0.1",
     "material-ui": "^0.18.7",
     "mocha": "^3.5.0",
     "path": "^0.12.7",
