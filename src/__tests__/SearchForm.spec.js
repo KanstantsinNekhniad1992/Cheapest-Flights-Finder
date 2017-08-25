@@ -14,19 +14,26 @@ describe('Search Form component', function () {
 
     let _wrapper;
     const shallowWithContext = (node) => shallow(node, {context: {muiTheme: getMuiTheme(baseTheme)}});
+    const props = {
+        airportsNames: [],
+        routes: {},
+        submitHandler: expect.createSpy()
+    };
 
     beforeEach(function () {
-        const props = {
-            airportsNames: [],
-            routes: {},
-            submitHandler: () => {
-            }
-        };
         _wrapper = shallowWithContext(<SearchFrom {...props}/>);
     });
 
     it('should render form', function () {
         expect(_wrapper.find('form').length).toBe(1);
+    });
+
+    it('should call submitHandler on submit', function () {
+        _wrapper.find('form').simulate('submit', {
+            preventDefault: () => {
+            }
+        });
+        expect(props.submitHandler).toHaveBeenCalled();
     });
 
     it('should render 2 AutoComplete components', function () {

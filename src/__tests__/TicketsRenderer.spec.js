@@ -76,4 +76,12 @@ describe('TicketsRenderer component', function () {
     it('should render generated tickets lists', function () {
         expect(_wrapper.find('.tickets-list').length).toBe(1);
     });
+
+    it('should not throw error if props not exist', function () {
+        let props = {
+            tickets: {}
+        };
+        let _wrapper = shallow(<TicketsRenderer {...props}/>);
+        expect(_wrapper.length).toEqual(1);
+    });
 });
